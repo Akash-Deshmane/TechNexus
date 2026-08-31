@@ -1,6 +1,6 @@
 const JWT = require('jsonwebtoken');
 
-const key = "Akash";
+const key = process.env.JWT_SECRET || "TechNexusSecretKey";
 
 function createToken(user){
     const payload = {

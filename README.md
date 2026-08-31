@@ -60,11 +60,11 @@ TechLoaded uses **MongoDB** as its primary NoSQL database.
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/AkashPatil-02/TechLoaded.git
+   git clone https://github.com/Akash-Deshmane/TechNexus.git
    ```
 2. Navigate into the directory and install dependencies:
    ```bash
-   cd TechLoaded
+   cd TechNexus
    npm install
    ```
 3. Create a `.env` file in the root directory and add the following variables:
