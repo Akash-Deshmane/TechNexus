@@ -10,22 +10,21 @@
     <title>SignUp</title>
 
     <style>
-      body{
-        font-family: 'Audiowide','sans serif';
-        background-image: url('/public/images/bg_signup.jpg');
-        overflow: hidden;
-        height: 100vh;
-        
+      body {
+        font-family: 'Audiowide', 'sans-serif';
+        background-image: url('/images/bg_signup.jpg');
+        background-size: cover;
+        background-attachment: fixed;
       }
     </style>
 </head>
-<body style="background-image: url('/images/bg_signup.jpg'); background-size: cover;">
+<body>
     <%- include('./partials/nav2')%>
-    <h1 style="text-align: center; color: azure; text-decoration: underline;margin-top: 30px;font-size:35px;">Sign Up</h1>
+    <h1 style="text-align: center; color: azure; text-decoration: underline; margin-top: 20px; font-size: 28px;">Sign Up</h1>
     
-    <div class="d-flex justify-content-center align-items-center min-vh-100">
-      <div class="container p-4 border border-3 rounded-3 bg-dark text-light shadow-lg" style="max-width: 400px;">
-          <h1 class="text-center mb-4 text-warning fw-bold text-shadow">Dive Into Some Tech Goodness</h1>
+    <div class="d-flex justify-content-center align-items-center mb-5 mt-3">
+      <div class="container p-3 border border-3 rounded-3 bg-dark text-light shadow-lg" style="max-width: 400px;">
+          <h2 class="text-center mb-3 text-warning fw-bold text-shadow" style="font-size: 20px;">Dive Into Some Tech Goodness</h2>
           
           <form action="/user/signup" method="POST" enctype="multipart/form-data">
 
@@ -54,7 +53,7 @@
                 aria-describedby="ProfileImageURL">
             </div>
   
-              <button type="submit" class="btn btn-warning w-100 fw-bold">Sign In</button>
+              <button type="submit" class="btn btn-warning w-100 fw-bold">Create Account</button>
           </form>
       </div>
   </div>

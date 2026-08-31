@@ -50,11 +50,16 @@ app.get("/",async (req,res)=>{
     }
 
 
-    const Name = await User.findById(req.user._id).select("fullName");
+    let name = null;
+    if (req.user) {
+        const userObj = await User.findById(req.user._id).select("fullName");
+        name = userObj ? userObj.fullName : null;
+    }
     res.render('home',{
-        name:Name.fullName,
-        user:req.user,
-        post:posts,
+        name: name,
+        user: req.user || null,
+        post: posts,
+        selectedCategory: selectedCategory || "",
     });
 });
 

@@ -50,8 +50,13 @@ router.post('/signin',async (req,res)=>{
 
 router.post('/signup', upload.single("ProfileImageURL"), async (req,res)=>{
     const {fullName,email,password} = req.body;
+    let profileImageURL = '/images/default.png'; // default image
+    if (req.file) {
+        profileImageURL = `/profilePics/${req.file.filename}`;
+    }
+    
     await User.create({
-        profileImageURL:`/profilePics/${req.file.filename}`,
+        profileImageURL,
         fullName,
         email,
         password, 

@@ -14,12 +14,12 @@
                         name="category" 
                         style="font-family:Verdana;" 
                         onchange="this.form.submit()">
-                    <option value="">Category</option>
-                    <option value="reviews">Reviews</option>
-                    <option value="news">News</option>
-                    <option value="guides">Guides</option>
-                    <option value="other">Other</option>
-                    <option value="all">All</option>
+                    <option value="" <%= !selectedCategory ? 'selected' : '' %>>Category</option>
+                    <option value="reviews" <%= selectedCategory === 'reviews' ? 'selected' : '' %>>Reviews</option>
+                    <option value="news" <%= selectedCategory === 'news' ? 'selected' : '' %>>News</option>
+                    <option value="guides" <%= selectedCategory === 'guides' ? 'selected' : '' %>>Guides</option>
+                    <option value="other" <%= selectedCategory === 'other' ? 'selected' : '' %>>Other</option>
+                    <option value="all" <%= selectedCategory === 'all' ? 'selected' : '' %>>All</option>
                 </select>
             </form>
         </div>
