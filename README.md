@@ -1,12 +1,12 @@
-# TechLoaded 🚀
+# TechNexus 🚀
 
-**TechLoaded** is a dynamic web application built for tech enthusiasts. It provides a platform where users can share, explore, and discuss technology-related posts, ranging from reviews and news to comprehensive guides.
+**TechNexus** is a dynamic web application built for tech enthusiasts. It provides a platform where users can share, explore, and discuss technology-related posts, ranging from reviews and news to comprehensive guides.
 
 ---
 
 ## 🌟 Introduction
 
-TechLoaded empowers users to upload posts regarding anything related to technology, view other users' posts, and engage in conversations through comments. With an emphasis on simplicity and functionality, it incorporates basic CRUD operations and a clean, responsive UI. 
+TechNexus empowers users to upload posts regarding anything related to technology, view other users' posts, and engage in conversations through comments. With an emphasis on simplicity and functionality, it incorporates basic CRUD operations and a clean, responsive UI. 
 
 ---
 
@@ -43,7 +43,7 @@ The application follows the **Model-View-Controller (MVC)** architectural patter
 
 ## 🗄️ Database
 
-TechLoaded uses **MongoDB** as its primary NoSQL database. 
+TechNexus uses **MongoDB** as its primary NoSQL database. 
 - **Users Collection**: Stores user credentials, hashed passwords, and profile picture paths.
 - **Posts Collection**: Stores post content, category, author reference, and associated image paths.
 - **Threads Collection**: Stores nested comments linked to specific posts and users.
@@ -82,7 +82,7 @@ TechLoaded uses **MongoDB** as its primary NoSQL database.
 
 ## 🌍 Deployment
 
-TechLoaded can be deployed easily on modern cloud platforms:
+TechNexus can be deployed easily on modern cloud platforms:
 - **Backend Hosting**: Render, Railway, or Heroku (Node.js environment).
 - **Database**: MongoDB Atlas (Cloud Database).
 - **File Storage**: For production, it is highly recommended to configure Multer to upload images to a cloud storage bucket (e.g., AWS S3, Cloudinary) instead of local disk storage.
