@@ -26,24 +26,30 @@ if (process.env.VERCEL) {
 app.use(methodOverride("_method"));
 
 // MongoDB connection
-if (process.env.dbPass) {
-    mongoose
-        .connect(process.env.dbPass)
-        .then(() => console.log("DB connected"))
-        .catch(err => console.error("DB connection error:", err));
-} else {
-    console.warn("Warning: dbPass environment variable is not defined!");
+let isConnecting = false;
+async function ensureDbConnected() {
+    if (mongoose.connection.readyState === 1 || isConnecting || !process.env.dbPass) {
+        return;
+    }
+    isConnecting = true;
+    try {
+        await mongoose.connect(process.env.dbPass, {
+            serverSelectionTimeoutMS: 5000,
+        });
+        console.log("DB connected");
+    } catch (err) {
+        console.error("DB connection error:", err.message);
+    } finally {
+        isConnecting = false;
+    }
 }
+
+// Initial connection attempt
+ensureDbConnected();
 
 // Serverless DB reconnect middleware to ensure connection on cold starts
 app.use(async (req, res, next) => {
-    if (mongoose.connection.readyState === 0 && process.env.dbPass) {
-        try {
-            await mongoose.connect(process.env.dbPass);
-        } catch (err) {
-            console.error("DB reconnect error:", err);
-        }
-    }
+    await ensureDbConnected();
     next();
 });
 
@@ -54,27 +60,29 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(checkForAuthenticationCookie("token"));
 
-
-
-app.get("/",async (req,res)=>{
-    
+app.get("/", async (req, res) => {
     const selectedCategory = req.query.category;
-    let posts;
-    console.log(selectedCategory);
-
-    if (selectedCategory && selectedCategory.toLowerCase() !== "all") {
-        posts = await Post.find({ category: selectedCategory });
-    } else {
-        posts = await Post.find({});
-    }
-
-
+    let posts = [];
     let name = null;
-    if (req.user) {
-        const userObj = await User.findById(req.user._id).select("fullName");
-        name = userObj ? userObj.fullName : null;
+
+    try {
+        if (mongoose.connection.readyState === 1) {
+            if (selectedCategory && selectedCategory.toLowerCase() !== "all") {
+                posts = await Post.find({ category: selectedCategory });
+            } else {
+                posts = await Post.find({});
+            }
+
+            if (req.user) {
+                const userObj = await User.findById(req.user._id).select("fullName");
+                name = userObj ? userObj.fullName : null;
+            }
+        }
+    } catch (err) {
+        console.error("Error loading home page posts:", err.message);
     }
-    res.render('home',{
+
+    res.render('home', {
         name: name,
         user: req.user || null,
         post: posts,
