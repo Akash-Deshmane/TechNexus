@@ -1,9 +1,22 @@
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+const os = require('os');
+
+const uploadDir = process.env.VERCEL
+    ? path.join(os.tmpdir(), 'uploads')
+    : path.resolve('./public/uploads/');
+
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.resolve('./public/uploads/'));
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
         const fileName = `${Date.now()}-${file.originalname.replace(/\s/g, '_')}`;

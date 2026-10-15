@@ -1,13 +1,25 @@
-const {Router} =require("express");
+const {Router} = require("express");
 const multer = require('multer');
 const User = require('../models/user');
 const Post = require('../models/post');
 const path = require('path');
+const fs = require('fs');
+const os = require('os');
 
+const profilePicDir = process.env.VERCEL
+    ? path.join(os.tmpdir(), 'ProfilePics')
+    : path.resolve('./public/ProfilePics/');
+
+if (!fs.existsSync(profilePicDir)) {
+    fs.mkdirSync(profilePicDir, { recursive: true });
+}
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.resolve('./public/ProfilePics/')); 
+        if (!fs.existsSync(profilePicDir)) {
+            fs.mkdirSync(profilePicDir, { recursive: true });
+        }
+        cb(null, profilePicDir); 
     },
     filename: function (req, file, cb) {
         const fileName = `${Date.now()}-${file.originalname}`;

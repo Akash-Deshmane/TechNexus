@@ -1,4 +1,5 @@
 const path = require("path");
+const os = require("os");
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser"); 
@@ -11,29 +12,47 @@ const methodOverride = require("method-override");
 const dotenv = require('dotenv');
 dotenv.config();
 
-
-
 const app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use("/profilePics",express.static(path.join(__dirname, "profilePics")));
+if (process.env.VERCEL) {
+    app.use("/uploads", express.static(path.join(os.tmpdir(), "uploads")));
+    app.use("/profilePics", express.static(path.join(os.tmpdir(), "ProfilePics")));
+} else {
+    app.use("/uploads", express.static(path.join(__dirname, "public", "uploads")));
+    app.use("/profilePics", express.static(path.join(__dirname, "public", "ProfilePics")));
+}
 
 app.use(methodOverride("_method"));
 
-mongoose
-    .connect(process.env.dbPass)
-    .then(e => console.log("DB connected"))
-    .catch(err => console.error("DB connection error:", err));
+// MongoDB connection
+if (process.env.dbPass) {
+    mongoose
+        .connect(process.env.dbPass)
+        .then(() => console.log("DB connected"))
+        .catch(err => console.error("DB connection error:", err));
+} else {
+    console.warn("Warning: dbPass environment variable is not defined!");
+}
 
-    
+// Serverless DB reconnect middleware to ensure connection on cold starts
+app.use(async (req, res, next) => {
+    if (mongoose.connection.readyState === 0 && process.env.dbPass) {
+        try {
+            await mongoose.connect(process.env.dbPass);
+        } catch (err) {
+            console.error("DB reconnect error:", err);
+        }
+    }
+    next();
+});
+
 app.set('view engine', 'ejs');
-app.set("views", path.resolve("./views"));
+app.set("views", path.join(__dirname, "views"));
 
-app.use(express.urlencoded ({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(checkForAuthenticationCookie("token"));
-app.use(express.static(path.resolve("./public")));
 
 
 
@@ -110,6 +129,11 @@ app.use("/user",userRoute);
 app.use("/post",postRoute);
 
 
-app.listen(8000,()=>{
-    console.log("server started !");
-});
+if (require.main === module) {
+    const PORT = process.env.PORT || 8000;
+    app.listen(PORT, () => {
+        console.log(`Server started on port ${PORT}!`);
+    });
+}
+
+module.exports = app;
